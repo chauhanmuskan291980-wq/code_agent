@@ -9,12 +9,17 @@ client = InferenceClient(
     token=HF_TOKEN
 )
 
-history = []
-
 def generate_response(prompt):
-    history.append(f"User: {prompt}")
+    if not prompt.strip():
+        return "Please enter a coding question."
 
-    final_prompt = "\n".join(history) + "\nAssistant:"
+    final_prompt = f"""
+You are a helpful code teaching assistant created by Muskan Chauhan.
+Answer coding questions clearly with examples.
+
+User: {prompt}
+Assistant:
+"""
 
     try:
         response = client.text_generation(
@@ -24,7 +29,6 @@ def generate_response(prompt):
             return_full_text=False
         )
 
-        history.append(f"Assistant: {response}")
         return response
 
     except Exception as e:
@@ -37,7 +41,7 @@ interface = gr.Interface(
         lines=4,
         placeholder="Ask any coding question..."
     ),
-    outputs="text",
+    outputs=gr.Textbox(label="Assistant Response"),
     title="Code Assistant by Muskan Chauhan",
     description="A coding assistant built using Python, Gradio, and Hugging Face."
 )
