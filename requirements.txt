@@ -1,2 +1,2 @@
-langchain
 gradio
+huggingface_hub
